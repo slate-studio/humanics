@@ -1,0 +1,237 @@
+version: '2.2'
+networks:
+  main:
+services:
+  mongo:
+    image: mongo:4.0.12
+    ports:
+      - "27017:27017"
+    networks:
+      main:
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    depends_on:
+      - mongo
+    networks:
+      main:
+
+  accounts:
+    image: ghcr.io/slate-studio/he-accounts:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-accounts
+
+  permissions:
+    image: ghcr.io/slate-studio/he-permissions:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-permissions
+
+  activity:
+    image: ghcr.io/slate-studio/he-activity:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-activity
+
+  now:
+    image: ghcr.io/slate-studio/he-now:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-now
+
+  cron:
+    image: ghcr.io/slate-studio/he-cron:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-cron
+
+  core:
+    image: ghcr.io/slate-studio/he-core:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-core
+
+  import:
+    image: ghcr.io/slate-studio/he-core:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+    networks:
+      main:
+        aliases:
+          - he-import
+
+  notifications:
+    image: ghcr.io/slate-studio/he-notifications:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-notifications
+
+  open-shifts:
+    image: ghcr.io/slate-studio/he-open-shifts:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-open-shifts
+
+  schedule:
+    image: ghcr.io/slate-studio/he-schedule:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-schedule
+
+  schedule-payloads:
+    image: ghcr.io/slate-studio/he-schedule-payloads:latest
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      main:
+        aliases:
+          - he-schedule-payloads
+
+  graphql:
+    image: ghcr.io/slate-studio/he-graphql:latest
+    # ports:
+    #   - "3000:3000"
+    environment:
+      NODE_ENV: production
+      NODE_APP_INSTANCE: gitlab
+      RELEASE: develop
+    depends_on:
+      - redis
+    networks:
+      main:
+        aliases:
+          - he-graphql
+
+  react-accounts:
+    image: ghcr.io/slate-studio/he-react-accounts:latest
+    networks:
+      main:
+        aliases:
+          - he-react-accounts
+
+  react:
+    image: ghcr.io/slate-studio/he-react:latest
+    environment:
+      ACCOUNTS_URI: http://accounts.humanics.local
+      RELEASE: develop
+    networks:
+      main:
+        aliases:
+          - he-react
+
+  seed:
+    image: ghcr.io/slate-studio/he-seed:latest
+    networks:
+      main:
+        aliases:
+          - he-seed
+
+  haproxy:
+    image: ghcr.io/slate-studio/haproxy:latest
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+    networks:
+      main:
+        aliases:
+          - "instance.humanics.local"
+          - "accounts.humanics.local"
+    depends_on:
+      - now
+      - cron
+      - core
+      - import
+      - graphql
+      - activity
+      - accounts
+      - schedule
+      - open-shifts
+      - permissions
+      - notifications
+      - react-accounts
+      - schedule-payloads
