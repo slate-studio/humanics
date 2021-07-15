@@ -173,8 +173,6 @@ services:
 
   graphql:
     image: ghcr.io/slate-studio/he-graphql:latest
-    # ports:
-    #   - "3000:3000"
     environment:
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
