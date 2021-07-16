@@ -5,19 +5,18 @@
 1. Get GitHub personal access token, than login to the registry:
 
   ```sh
-  export CR_PAT=GITHUB_ACCESS_TOKEN
-  echo $CR_PAT | docker login ghcr.io -u alexkravets --password-stdin
+  docker login ghcr.io -u alexkravets --password GITHUB_ACCESS_TOKEN
   ```
 
-2. Update `/etc/hosts` file to include virtual domains by replacing
-`127.0.0.1 localhost` line with:
+2. Update `/etc/hosts` file to add support for virtual domains by adding or
+extending `127.0.0.1` line with:
 
   ```
-  127.0.0.1 localhost accounts.humanics.local instance.humanics.local
+  127.0.0.1 accounts.humanics.local instance.humanics.local
   ```
 
 3. Create Docker stack:
 
-```sh
-docker-compose up
-```
+  ```sh
+  docker-compose up
+  ```
