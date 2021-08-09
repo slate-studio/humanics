@@ -21,6 +21,7 @@ services:
   accounts:
     image: ghcr.io/slate-studio/he-accounts:latest
     environment:
+      INSTANCE_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -35,6 +36,8 @@ services:
   permissions:
     image: ghcr.io/slate-studio/he-permissions:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -49,6 +52,8 @@ services:
   activity:
     image: ghcr.io/slate-studio/he-activity:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -63,6 +68,8 @@ services:
   now:
     image: ghcr.io/slate-studio/he-now:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -77,6 +84,8 @@ services:
   cron:
     image: ghcr.io/slate-studio/he-cron:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -91,6 +100,8 @@ services:
   core:
     image: ghcr.io/slate-studio/he-core:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -105,6 +116,8 @@ services:
   import:
     image: ghcr.io/slate-studio/he-core:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -118,6 +131,8 @@ services:
   notifications:
     image: ghcr.io/slate-studio/he-notifications:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -132,6 +147,8 @@ services:
   open-shifts:
     image: ghcr.io/slate-studio/he-open-shifts:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -146,6 +163,8 @@ services:
   schedule:
     image: ghcr.io/slate-studio/he-schedule:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -160,6 +179,8 @@ services:
   schedule-payloads:
     image: ghcr.io/slate-studio/he-schedule-payloads:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -174,6 +195,8 @@ services:
   graphql:
     image: ghcr.io/slate-studio/he-graphql:latest
     environment:
+      INSTANCE_URI: "http://instance.humanics.local"
+      ACCOUNTS_URI: "http://accounts.humanics.local"
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
@@ -203,13 +226,18 @@ services:
 
   seed:
     image: ghcr.io/slate-studio/he-seed:latest
+    environment:
+      NODE_CONFIG: '{"target":{"accountsUri":"http://accounts.humanics.local","instanceUri":"http://instance.humanics.local"}}'
     networks:
       main:
         aliases:
           - he-seed
 
   haproxy:
-    image: ghcr.io/slate-studio/haproxy:latest
+    # image: ghcr.io/slate-studio/haproxy:latest
+    build:
+      context: ./haproxy/
+      dockerfile: Dockerfile
     expose:
       - "80"
     ports:
