@@ -200,6 +200,7 @@ services:
       NODE_ENV: production
       NODE_APP_INSTANCE: gitlab
       RELEASE: develop
+      NODE_CONFIG: '{"website":{"host":"http://instance.humanics.local"},"server":{"cors":{"origin":"http://instance.humanics.local"}}}'
     depends_on:
       - redis
     networks:
